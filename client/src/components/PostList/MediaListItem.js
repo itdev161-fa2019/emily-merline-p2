@@ -23,11 +23,9 @@ const MediaListItem = props => {
         <div>
             <div className="mediaListItem" onClick={() => handleClickMedia(media)}>
             <h1>{media.title}</h1>
-            <p>{media.creator}</p>
-            <p>{media.type}</p>
-            <p>{media.units}</p>
-            <p>{media.progress}</p>
-            <p>{media.unitType}</p>
+            <p><b>Creator:</b> {media.creator}</p>
+            <p><b>Type:</b> {media.type}</p>
+            <p><b>Progress:</b> {media.progress}/{media.units} {media.unitType}</p>
             </div>
             <div className="mediaControls">
                 <button onClick={() => deleteMedia(media)}>Delete</button>
