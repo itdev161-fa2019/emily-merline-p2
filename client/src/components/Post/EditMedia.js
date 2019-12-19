@@ -7,7 +7,7 @@ const EditMedia = ({ token, media, onMediaUpdated }) => {
     let history = useHistory()
     const [mediaData, setMediaData] = useState({
         title: media.title,
-        creator: media.body,
+        creator: media.creator,
         type: media.type,
         units: media.units,
         progress: media.progress,

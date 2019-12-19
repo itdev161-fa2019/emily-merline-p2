@@ -14,7 +14,11 @@ class App extends React.Component {
     medias: [],
     media: null,
     token: null,
-    user: null
+    user: null,
+    filterTitle: '',
+    filterCreator: '',
+    filterType: '',
+    mediasList: []
   }
 
   componentDidMount() {
@@ -68,7 +72,8 @@ class App extends React.Component {
         .get('/api/medias', config)
         .then(response => {
           this.setState({
-            medias: response.data
+            medias: response.data,
+            mediasList: response.data
           })
         })
         .catch(error => {
@@ -104,7 +109,8 @@ class App extends React.Component {
         .then(response => {
           const newMedias = this.state.medias.filter(m => m._id !== media._id)
           this.setState({
-            medias: [...newMedias]
+            medias: [...newMedias],
+            mediasList: [...newMedias]
           })
         })
         .catch(error => {
@@ -123,7 +129,8 @@ class App extends React.Component {
     const newMedias = [...this.state.medias, media]
 
     this.setState({
-      medias: newMedias
+      medias: newMedias,
+      mediasList: newMedias
     })
   }
 
@@ -135,15 +142,50 @@ class App extends React.Component {
     newMedias[index] = media
 
     this.setState({
-      medias: newMedias
+      medias: newMedias,
+      mediasList: newMedias
     })
   }
+  
+  onChangeFilter = e => {
+    const { name, value } = e.target 
+
+    let newMedias = this.state.medias
+
+    if(name === "filterTitle"){
+      
+    newMedias = newMedias.filter(media => media.title.toLowerCase().includes(value.toLowerCase()))
+    newMedias = newMedias.filter(media => media.creator.toLowerCase().includes(this.state.filterCreator))
+    newMedias = newMedias.filter(media => media.type.toLowerCase().includes(this.state.filterType))
+
+    } else if(name === "filterCreator") {
+      
+    newMedias = newMedias.filter(media => media.title.toLowerCase().includes(this.state.filterTitle))
+    newMedias = newMedias.filter(media => media.creator.toLowerCase().includes(value.toLowerCase()))
+    newMedias = newMedias.filter(media => media.type.toLowerCase().includes(this.state.filterType))
+
+    } else {
+      
+    newMedias = newMedias.filter(media => media.title.toLowerCase().includes(this.state.filterTitle))
+    newMedias = newMedias.filter(media => media.creator.toLowerCase().includes(this.state.filterCreator))
+    newMedias = newMedias.filter(media => media.type.toLowerCase().includes(value.toLowerCase()))
+
+    }
+    console.log(newMedias)
+
+    this.setState({
+      [name]: value.toLowerCase(),
+      mediasList: newMedias
+    })
+
+}
 
   render(){
-    let { user, medias, media, token } = this.state;
+    let { user, media, token, mediasList, filterTitle, filterCreator, filterType } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     }
+
     return (
       <Router>
       <div className="App">
@@ -155,7 +197,7 @@ class App extends React.Component {
               </li>
               <li>
                 {user ? (
-                  <Link to="/new-media">New Post</Link>
+                  <Link to="/new-media">New Media Item</Link>
                 ) : (
                   <Link to="/register">Register</Link>
                 )}
@@ -176,8 +218,31 @@ class App extends React.Component {
             {user ? ( 
             <React.Fragment>
               <div>Hello {user}!</div>
+              <div>
+              <input
+              name="filterTitle"
+              type="text"
+              placeholder="Filter Title"
+              value={filterTitle}
+              onChange={e => this.onChangeFilter(e)}
+              />
+                            <input
+              name="filterCreator"
+              type="text"
+              placeholder="Filter Creator"
+              value={filterCreator}
+              onChange={e => this.onChangeFilter(e)}
+              />
+                            <input
+              name="filterType"
+              type="text"
+              placeholder="Filter Type"
+              value={filterType}
+              onChange={e => this.onChangeFilter(e)}
+              />
+              </div>
               <MediaList 
-              medias={medias} 
+              medias={mediasList} 
               clickMedia={this.viewMedia} 
               deleteMedia={this.deleteMedia}
               editMedia={this.editMedia}/>
