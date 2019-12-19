@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://emily-merline:emily123@cluster0-twtco.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "maytheforcebewithyou"
+}
